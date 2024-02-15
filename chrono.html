@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chronomètre</title>
+    <style>
+        body {
+            background-image: url('https://cdn.comsol.com/wordpress/sites/1/2021/03/rock-pigeon-operculum-closeup.jpg');
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #container {
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        #timer {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        #buttons {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        button {
+            border-radius: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        .red {
+            background-color: red;
+            color: white;
+        }
+
+        .green {
+            background-color: green;
+            color: white;
+        }
+
+        .yellow {
+            background-color: yellow;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="timer">00:00:00</div>
+        <div id="buttons">
+            <button id="startStop" class="green">Start</button>
+            <button id="reset" class="red">Reset</button>
+        </div>
+    </div>
+
+    <script>
+        let timer;
+        let running = false;
+        let seconds = 0;
+        let minutes = 0;
+        let hours = 0;
+
+        const timerDisplay = document.getElementById('timer');
+        const startStopButton = document.getElementById('startStop');
+        const resetButton = document.getElementById('reset');
+
+        function startTimer() {
+            running = true;
+            startStopButton.innerText = 'Pause';
+            startStopButton.classList.remove('green');
+            startStopButton.classList.add('yellow');
+
+            timer = setInterval(updateTimer, 1000);
+        }
+
+        function pauseTimer() {
+            running = false;
+            startStopButton.innerText = 'Resume';
+            startStopButton.classList.remove('yellow');
+            startStopButton.classList.add('green');
+
+            clearInterval(timer);
+        }
+
+        function resetTimer() {
+            running = false;
+            clearInterval(timer);
+            startStopButton.innerText = 'Start';
+            startStopButton.classList.remove('yellow');
+            startStopButton.classList.remove('green');
+            startStopButton.classList.add('green');
+            seconds = 0;
+            minutes = 0;
+            hours = 0;
+            updateTimerDisplay();
+        }
+
+        function updateTimer() {
+            seconds++;
+            if (seconds === 60) {
+                seconds = 0;
+                minutes++;
+                if (minutes === 60) {
+                    minutes = 0;
+                    hours++;
+                }
+            }
+            updateTimerDisplay();
+        }
+
+        function updateTimerDisplay() {
+            const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            timerDisplay.innerText = formattedTime;
+        }
+
+        startStopButton.addEventListener('click', () => {
+            if (running) {
+                pauseTimer();
+            } else {
+                startTimer();
+            }
+        });
+
+        resetButton.addEventListener('click', resetTimer);
+    </script>
+</body>
+</html>
